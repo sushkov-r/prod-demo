@@ -23,3 +23,11 @@ async def complete_text(prompt: str = Query(..., max_length=50)):
     text = tokenizer.decode(outputs[0], skip_special_tokens=True)
     return {"completed_text": text}
 
+
+@app.get("/")
+def read_root():
+    return {"message": "Hello, world!"}
+
+@app.get("/health")
+def read_health():
+    return {"status": "OK"}

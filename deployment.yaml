@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: ai-prod-demo
+ labels:
+   app: ai-prod-demo
+spec:
+ replicas: 1
+ selector:
+   matchLabels:
+     app: ai-prod-demo
+ template:
+   metadata:
+     labels:
+       app: ai-prod-demo
+   spec:
+     containers:
+       - name: ai-prod-demo
+         image: registry.digitalocean.com/ai-prod-demo/fastapi:latest
+         imagePullPolicy: Always
+         ports:
+           - containerPort: 8000
+         readinessProbe:
+           httpGet:
+             path: /health
+             port: 8000
+           initialDelaySeconds: 5
+           timeoutSeconds: 5
+           periodSeconds: 5
