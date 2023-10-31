@@ -13,6 +13,7 @@ on:
     paths:
       - 'src/**'
       - 'Dockerfile'
+      - 'streamlit.Dockerfile'
       - 'pyproject.toml'
       - '.github/workflows/**'
 
@@ -47,6 +48,16 @@ jobs:
     - name: Push image to DigitalOcean Container Registry
       # run: docker push ${{ secrets.REGISTRY_NAME }}/ai-prod-demo:$(echo $GITHUB_SHA | head -c7)
       run: docker push ${{ secrets.REGISTRY_NAME }}/ai-prod-demo:latest
+
+    - name: Build container image
+      run: docker build -f streamlit.Dockerfile -t ${{ secrets.REGISTRY_NAME }}/prod-demo-ui:latest .
+
+    - name: Log in to DigitalOcean Container Registry with short-lived credentials
+      run: doctl registry login --expiry-seconds 1200
+
+    - name: Push image to DigitalOcean Container Registry
+      # run: docker push ${{ secrets.REGISTRY_NAME }}/ai-prod-demo:$(echo $GITHUB_SHA | head -c7)
+      run: docker push ${{ secrets.REGISTRY_NAME }}/prod-demo-ui:latest
 
     # Deploy to DigitalOCcean Kubernetes.
     # - name: Update deployment file
