@@ -18,6 +18,8 @@ dependencies = [
   "uvicorn",
   "transformers",
   "torch",
+  "streamlit",
+  "requests",
 ]
 
 # [project.urls]
