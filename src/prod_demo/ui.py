@@ -11,7 +11,7 @@ prompt = st.text_input("Enter your prompt:", "YourPromptHere")
 if prompt:
     # Make a request to the FastAPI server
     try:
-        response = requests.get(f'http://ai-prod-demo-service.default.svc.cluster.local:80/complete_text/?prompt={prompt}')
+        response = requests.get(f'ai-prod-demo-service:80/complete_text/?prompt={prompt}')
         if response.status_code == 200:
             completed_text = response.json()['completed_text']
             st.write(f"Completed Text: {completed_text}")
