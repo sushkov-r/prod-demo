@@ -1,21 +1,33 @@
+import os
+
 import streamlit as st
 import requests
+from requests.exceptions import InvalidSchema, ConnectionError
+
+BACKEND_SERVER = os.getenv("BACKEND_SERVER", "ai-prod-demo-service:80")
+
+def backend_request(prompt):
+    response = requests.get(f"{BACKEND_SERVER}/complete_text/?prompt={prompt}")
+    response.raise_for_status()
+    return response.json()['completed_text']
+
 
 # Create a UI in Streamlit
 st.title('Text Completion with FastAPI, Streamlit and Huggingface')
 
 # Input text box for prompt
-prompt = st.text_input("Enter your prompt:", "YourPromptHere")
+prompt = st.text_input("Enter your prompt:", "")
 
 # Check if the prompt is not empty
 if prompt:
     # Make a request to the FastAPI server
     try:
-        response = requests.get(f'ai-prod-demo-service:80/complete_text/?prompt={prompt}')
-        if response.status_code == 200:
-            completed_text = response.json()['completed_text']
-            st.write(f"Completed Text: {completed_text}")
-        else:
-            st.write(f"Failed to get response. Status code: {response.status_code}")
+        completed_text = backend_request(prompt)
+        st.write(f"Completed Text: {completed_text}")
+    except InvalidSchema as e:
+        st.write(f"An error occurred: {e}. Is the backend running?")
+    except ConnectionError as e:
+        st.write(f"An error occurred: {e}. Is the backend running?")
     except Exception as e:
         st.write(f"An error occurred: {e}")
+        raise e
