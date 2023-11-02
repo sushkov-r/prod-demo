@@ -7,7 +7,7 @@ from requests.exceptions import InvalidSchema, ConnectionError
 BACKEND_SERVER = os.getenv("BACKEND_SERVER", "ai-prod-demo-service:80")
 
 def backend_request(prompt):
-    response = requests.get(f"{BACKEND_SERVER}/complete_text/?prompt={prompt}")
+    response = requests.get(f"http://{BACKEND_SERVER}/complete_text/?prompt={prompt}")
     response.raise_for_status()
     return response.json()['completed_text']
 
